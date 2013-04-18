@@ -89,6 +89,9 @@ class Package(models.Model):
         except Release.DoesNotExist:
             return None
 
+    def get_releases_by_version(self):
+        return self.releases.order_by('-version')
+
 class Release(models.Model):
     package = models.ForeignKey(Package, related_name="releases", editable=False)
     version = models.CharField(max_length=128, editable=False)
