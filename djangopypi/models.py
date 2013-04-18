@@ -14,7 +14,7 @@ class PackageInfoField(models.Field):
 
     def __init__(self, *args, **kwargs):
         kwargs['editable'] = False
-        super(PackageInfoField,self).__init__(*args, **kwargs)
+        super(PackageInfoField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if isinstance(value, basestring):
@@ -24,12 +24,12 @@ class PackageInfoField(models.Field):
                 return MultiValueDict()
         if isinstance(value, dict):
             return MultiValueDict(value)
-        if isinstance(value,MultiValueDict):
+        if isinstance(value, MultiValueDict):
             return value
         raise ValueError('Unexpected value encountered when converting data to python')
 
     def get_prep_value(self, value):
-        if isinstance(value,MultiValueDict):
+        if isinstance(value, MultiValueDict):
             return json.dumps(dict(value.iterlists()))
         if isinstance(value, dict):
             return json.dumps(value)
@@ -66,7 +66,7 @@ class Package(models.Model):
         verbose_name = _(u"package")
         verbose_name_plural = _(u"packages")
         get_latest_by = "releases__latest"
-        ordering = ['name',]
+        ordering = ['name', ]
 
     def __unicode__(self):
         return self.name
@@ -149,7 +149,7 @@ class Distribution(models.Model):
 
     @property
     def display_filetype(self):
-        for key,value in settings.DJANGOPYPI_DIST_FILE_TYPES:
+        for key, value in settings.DJANGOPYPI_DIST_FILE_TYPES:
             if key == self.filetype:
                 return value
         return self.filetype
@@ -188,7 +188,7 @@ except ImportError:
 class MasterIndex(models.Model):
     title = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
-    
+
     def __unicode__(self):
         return self.title
 
@@ -197,9 +197,9 @@ class MirrorLog(models.Model):
     created = models.DateTimeField(default='now')
     releases_added = models.ManyToManyField(Release, blank=True,
                                             related_name='mirror_sources')
-    
+
     def __unicode__(self):
         return '%s (%s)' % (self.master, str(self.created),)
-    
+
     class Meta:
         get_latest_by = "created"
