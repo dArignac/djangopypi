@@ -28,7 +28,7 @@ def details(request, package, proxy_folder='pypi', **kwargs):
         return list_detail.object_detail(request, object_id=package, **kwargs)
     except Http404, e:
         if settings.DJANGOPYPI_PROXY_MISSING:
-            return HttpResponseRedirect('%s/%s/%s/' % 
+            return HttpResponseRedirect('%s/%s/%s/' %
                                         (settings.DJANGOPYPI_PROXY_BASE_URL.rstrip('/'),
                                          proxy_folder,
                                          package))
@@ -50,10 +50,10 @@ def search(request, **kwargs):
         form = SimplePackageSearchForm(request.POST)
     else:
         form = SimplePackageSearchForm(request.GET)
-    
+
     if form.is_valid():
         q = form.cleaned_data['query']
-        kwargs['queryset'] = Package.objects.filter(Q(name__contains=q) | 
+        kwargs['queryset'] = Package.objects.filter(Q(name__contains=q) |
                                                     Q(releases__package_info__contains=q)).distinct()
     return index(request, **kwargs)
 
@@ -76,10 +76,10 @@ def manage_versions(request, package, **kwargs):
     kwargs.setdefault('formset_factory', inlineformset_factory(Package, Release, **kwargs['formset_factory_kwargs']))
     kwargs.setdefault('template_name', 'djangopypi/package_manage_versions.html')
     kwargs.setdefault('template_object_name', 'package')
-    kwargs.setdefault('extra_context',{})
-    kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)
+    kwargs.setdefault('extra_context', {})
+    kwargs.setdefault('mimetype', settings.DEFAULT_CONTENT_TYPE)
     kwargs['extra_context'][kwargs['template_object_name']] = package
-    kwargs.setdefault('formset_kwargs',{})
+    kwargs.setdefault('formset_kwargs', {})
     kwargs['formset_kwargs']['instance'] = package
 
     if request.method == 'POST':
