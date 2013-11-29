@@ -90,7 +90,7 @@ class Package(models.Model):
             return None
 
     def get_releases_by_version(self):
-        return self.releases.order_by('-version')
+        return sorted(self.releases.all(), key=lambda x: tuple(map(int, (x.version.split('.')))))
 
 class Release(models.Model):
     package = models.ForeignKey(Package, related_name="releases", editable=False)
