@@ -90,7 +90,14 @@ class Package(models.Model):
             return None
 
     def get_releases_by_version(self):
-        return sorted(self.releases.all(), key=lambda x: tuple(map(int, (x.version.split('.')))), reverse=True)
+
+        def pseudo_cast_to_int(value):
+            try:
+                return int(value)
+            except:
+                return value
+
+        return sorted(self.releases.all(), key=lambda x: tuple(map(pseudo_cast_to_int, (x.version.split('.')))), reverse=True)
 
 class Release(models.Model):
     package = models.ForeignKey(Package, related_name="releases", editable=False)
